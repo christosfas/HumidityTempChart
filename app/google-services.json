@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1079750729818",
+    "firebase_url": "https://humiditytemperaturemonitor-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "humiditytemperaturemonitor",
+    "storage_bucket": "humiditytemperaturemonitor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079750729818:android:36461cd4d8815085def863",
+        "android_client_info": {
+          "package_name": "com.example.humiditytempchart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079750729818-v814m1tri06hnbhlh9kmbl1ush8ge0he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBlbve_TgVurzWEdHQs1_yrfkdSNbKWi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079750729818-v814m1tri06hnbhlh9kmbl1ush8ge0he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079750729818:android:89e4ebf492e9844cdef863",
+        "android_client_info": {
+          "package_name": "com.example.humiditytempmonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079750729818-v814m1tri06hnbhlh9kmbl1ush8ge0he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBlbve_TgVurzWEdHQs1_yrfkdSNbKWi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079750729818-v814m1tri06hnbhlh9kmbl1ush8ge0he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
