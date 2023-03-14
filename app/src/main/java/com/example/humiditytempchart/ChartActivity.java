@@ -81,10 +81,10 @@ public class ChartActivity extends AppCompatActivity {
 
                 LineDataSet tempDataSet = new LineDataSet(tempList,"*C");
                 tempDataSet.setDrawFilled(true);
-                tempDataSet.setFillColor(Color.RED);
+                tempDataSet.setFillColor(Color.parseColor("#FE7F27"));
                 tempDataSet.setLineWidth(3f);
-                tempDataSet.setColor(Color.RED);
-                tempDataSet.setCircleColor(Color.RED);
+                tempDataSet.setColor(Color.parseColor("#FE7F27"));
+                tempDataSet.setCircleColor(Color.parseColor("#BD3E15"));
                 tempDataSet.setValueTextSize(10f);
                 tempDataSet.setValueTextColor(Color.WHITE);
                 //tempDataSet.enableDashedLine(8,8,0);

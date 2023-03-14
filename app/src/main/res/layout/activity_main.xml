@@ -51,10 +51,9 @@
         app:layout_constraintVertical_bias="0.158" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/currentHumidityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="16"
         android:textAlignment="center"
         android:textColor="#03A8F3"
         android:textSize="48sp"
@@ -66,11 +65,10 @@
         app:layout_constraintVertical_bias="0.127" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/currentTempTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="22"
         android:textAlignment="center"
         android:textColor="#FE7F27"
         android:textSize="48sp"
@@ -86,7 +84,7 @@
         android:layout_marginTop="11dp"
         android:layout_marginBottom="74dp"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintEnd_toStartOf="@+id/currentHumidityTextView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -97,7 +95,7 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView5"
+        app:layout_constraintEnd_toStartOf="@+id/currentTempTextView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
@@ -114,7 +112,7 @@
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/currentTempTextView"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
@@ -129,7 +127,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/currentHumidityTextView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
