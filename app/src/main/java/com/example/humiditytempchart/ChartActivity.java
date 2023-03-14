@@ -211,9 +211,9 @@ public class ChartActivity extends AppCompatActivity {
 
                 LineDataSet tempDataSet = new LineDataSet(tempList,"*C");
                 tempDataSet.setDrawFilled(true);
-                tempDataSet.setFillColor(Color.RED);
+                tempDataSet.setFillColor(Color.parseColor("#FFFF5722"));
                 tempDataSet.setLineWidth(3f);
-                tempDataSet.setColor(Color.RED);
+                tempDataSet.setColor(Color.parseColor("#FE7F27"));
                 tempDataSet.setCircleColor(Color.RED);
                 tempDataSet.setValueTextSize(10f);
                 tempDataSet.setValueTextColor(Color.WHITE);
@@ -236,6 +236,11 @@ public class ChartActivity extends AppCompatActivity {
     }
 
     public void goBack(View view) {
+        Intent intent = new Intent(ChartActivity.this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void onBackPressed(){
         Intent intent = new Intent(ChartActivity.this,MainActivity.class);
         startActivity(intent);
     }

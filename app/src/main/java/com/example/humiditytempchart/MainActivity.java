@@ -18,4 +18,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,ChartActivity.class);
         startActivity(intent);
     }
+
+    public void onBackPressed(){}
 }
