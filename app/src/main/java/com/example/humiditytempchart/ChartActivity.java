@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -70,9 +71,11 @@ public class ChartActivity extends AppCompatActivity {
                 humidityDataSet.setFillColor(Color.parseColor("#03A9F4"));
                 humidityDataSet.setLineWidth(3f);
                 humidityDataSet.setColor(Color.parseColor("#03A9F4"));
+                //humidityDataSet.setDrawCircles(false);
                 humidityDataSet.setCircleColor(Color.BLUE);
-                humidityDataSet.setValueTextSize(10f);
-                humidityDataSet.setValueTextColor(Color.WHITE);
+                //humidityDataSet.setValueTextSize(10f);
+                //humidityDataSet.setValueTextColor(Color.WHITE);
+                humidityDataSet.setDrawValues(false);
                 //humidityDataSet.enableDashedLine(8,8,0);
                 LineData humidityData = new LineData(humidityDataSet);
                 humidityChart.setData(humidityData);
@@ -84,9 +87,11 @@ public class ChartActivity extends AppCompatActivity {
                 tempDataSet.setFillColor(Color.parseColor("#FE7F27"));
                 tempDataSet.setLineWidth(3f);
                 tempDataSet.setColor(Color.parseColor("#FE7F27"));
+                //tempDataSet.setDrawCircles(false);
                 tempDataSet.setCircleColor(Color.parseColor("#BD3E15"));
-                tempDataSet.setValueTextSize(10f);
-                tempDataSet.setValueTextColor(Color.WHITE);
+                //tempDataSet.setValueTextSize(10f);
+                //tempDataSet.setValueTextColor(Color.WHITE);
+                tempDataSet.setDrawValues(false);
                 //tempDataSet.enableDashedLine(8,8,0);
                 LineData tempData = new LineData(tempDataSet);
                 tempChart.setData(tempData);
@@ -126,6 +131,8 @@ public class ChartActivity extends AppCompatActivity {
         getApplicationContext().bindService(firebaseServiceIntent, mConnection, BIND_AUTO_CREATE);
         getApplicationContext().startService(firebaseServiceIntent);
         getApplicationContext().registerReceiver(firebaseReceiver, new IntentFilter("com.example.humiditytempchart.broadcast.FIREBASE_ACTION"));
+        IMarker marker = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view_layout);
+
 
         humidityChart = (LineChart)findViewById(R.id.humidityChart);
         YAxis humidityYAxis = humidityChart.getAxisLeft();
@@ -152,6 +159,7 @@ public class ChartActivity extends AppCompatActivity {
         humidityChart.getLegend().setTextColor(Color.WHITE);
         humidityChart.getDescription().setTextColor(Color.WHITE);
         humidityChart.getDescription().setText("Humidity Measurements Curve");
+        humidityChart.setMarker(marker);
 
         tempChart = (LineChart)findViewById(R.id.tempChart);
         YAxis tempYAxis = tempChart.getAxisLeft();
@@ -178,6 +186,7 @@ public class ChartActivity extends AppCompatActivity {
         tempChart.getLegend().setTextColor(Color.WHITE);
         tempChart.getDescription().setTextColor(Color.WHITE);
         tempChart.getDescription().setText("Temperature Measurements Curve");
+        tempChart.setMarker(marker);
 
     }
 
