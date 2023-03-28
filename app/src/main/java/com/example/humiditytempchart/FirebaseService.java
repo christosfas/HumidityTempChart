@@ -23,6 +23,7 @@ public class FirebaseService extends Service {
     List<Float> tempList = new ArrayList<Float>();
     List<String> formattedTimeList =  new ArrayList<String>();
     List<Float> timestampList = new ArrayList<Float>();
+    int tankFull = 0;
     DatabaseReference jsonRef = FirebaseDatabase.getInstance().getReference("test/json/");
     long ref_ts;
     float prev_ts = 0;
@@ -87,6 +88,7 @@ public class FirebaseService extends Service {
         bundle.putFloatArray("tempList", array);
 
         bundle.putLong("ref_ts", ref_ts);
+        bundle.putInt("tankFull", tankFull);
         intent.putExtra( "bundle", bundle);
         sendBroadcast(intent);
     }
@@ -174,6 +176,8 @@ public class FirebaseService extends Service {
                 count++;
 
             }
+
+            tankFull = DataSnapshot.child("tankFull/0").getValue(Integer.class);
 
             broadcastUpdate("com.example.humiditytempchart.broadcast.FIREBASE_ACTION");
 
