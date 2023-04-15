@@ -24,7 +24,7 @@ public class FirebaseService extends Service {
     List<String> formattedTimeList =  new ArrayList<String>();
     List<Float> timestampList = new ArrayList<Float>();
     int tankFull = 0;
-    DatabaseReference jsonRef = FirebaseDatabase.getInstance().getReference("test/json/");
+    DatabaseReference jsonRef;
     long ref_ts;
     float prev_ts = 0;
 
@@ -40,6 +40,9 @@ public class FirebaseService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
+        jsonRef = FirebaseDatabase.getInstance().getReference("test/json/");
         jsonRef.addValueEventListener(listener);
         return mBinder;
     }
