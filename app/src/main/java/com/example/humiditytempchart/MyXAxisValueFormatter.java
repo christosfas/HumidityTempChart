@@ -36,7 +36,7 @@ public class MyXAxisValueFormatter extends ValueFormatter  {
     @Override
     public String getFormattedValue(float value) {
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTimeInMillis((long)value + ref - (60*60*3*1000));
+        cal.setTimeInMillis((long)value + ref);
         hours = cal.getTime().getHours();
         minutes = cal.getTime().getMinutes();
         seconds = cal.getTime().getSeconds();
