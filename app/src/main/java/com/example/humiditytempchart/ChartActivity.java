@@ -44,27 +44,22 @@ public class ChartActivity extends AppCompatActivity {
     private BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction() == "com.example.humiditytempchart.broadcast.FIREBASE_ACTION"){
+            if(intent.getAction().equals("com.example.humiditytempchart.broadcast.FIREBASE_ACTION")){
                 Bundle bundle = intent.getBundleExtra("bundle");
-                if(humidityList.isEmpty() && tempList.isEmpty() && timestampList.isEmpty() && ref_ts == 0){
-                    ref_ts = bundle.getLong("ref_ts");
-                    float[] humidityArray = bundle.getFloatArray("humidityList");
-                    float[] tempArray = bundle.getFloatArray("tempList");
-                    float[] timestampArray = bundle.getFloatArray("timestampList");
-                    for(int i =0; i < timestampArray.length; i++ ){
-                        humidityList.add(new Entry(timestampArray[i], humidityArray[i]));
-                        tempList.add(new Entry(timestampArray[i], tempArray[i]));
-                        ValueFormatter myAxisValueFormatter = new MyXAxisValueFormatter(/**timestampList,formattedTimeList**/ref_ts);
-                        humidityChart.getXAxis().setValueFormatter(myAxisValueFormatter);
-                        tempChart.getXAxis().setValueFormatter(myAxisValueFormatter);
-                    }
-                }else{
-                    float[] humidityArray = bundle.getFloatArray("humidityList");
-                    float[] tempArray = bundle.getFloatArray("tempList");
-                    float[] timestampArray = bundle.getFloatArray("timestampList");
-                    humidityList.add(new Entry(timestampArray[timestampArray.length-1], humidityArray[humidityArray.length-1]));
-                    tempList.add(new Entry(timestampArray[timestampArray.length-1], tempArray[tempArray.length-1]));
+                ref_ts = bundle.getLong("ref_ts");
+                float[] humidityArray = bundle.getFloatArray("humidityList");
+                float[] tempArray = bundle.getFloatArray("tempList");
+                float[] timestampArray = bundle.getFloatArray("timestampList");
+                humidityList.clear();
+                tempList.clear();
+                for(int i =0; i < timestampArray.length; i++ ){
+                    humidityList.add(new Entry(timestampArray[i], humidityArray[i]));
+                    tempList.add(new Entry(timestampArray[i], tempArray[i]));
                 }
+
+                ValueFormatter myAxisValueFormatter = new MyXAxisValueFormatter(ref_ts);
+                humidityChart.getXAxis().setValueFormatter(myAxisValueFormatter);
+                tempChart.getXAxis().setValueFormatter(myAxisValueFormatter);
 
                 LineDataSet humidityDataSet = new LineDataSet(humidityList,"% humidity");
                 humidityDataSet.setDrawFilled(true);
