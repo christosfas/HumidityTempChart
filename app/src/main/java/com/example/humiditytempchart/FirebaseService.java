@@ -48,7 +48,7 @@ public class FirebaseService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         broadcastUpdate("com.example.humiditytempchart.broadcast.FIREBASE_ACTION");
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override

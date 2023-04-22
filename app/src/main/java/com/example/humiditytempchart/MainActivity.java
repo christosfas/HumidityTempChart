@@ -41,14 +41,11 @@ public class MainActivity extends AppCompatActivity {
                 float[] humidityArray = bundle.getFloatArray("humidityList");
                 float[] tempArray = bundle.getFloatArray("tempList");
                 float[] timestampArray = bundle.getFloatArray("timestampList");
-                //Notification tankNotification = null;
 
                 if(bundle.getInt("tankFull") == 1){
-                    //tankNotification = tankNotificationbuilder.build();
                     notificationManager.notify(0, tankNotificationbuilder.build());
-                }else if(bundle.getInt("tankFull") == 0 /**&& tankNotification != null**/){
+                }else if(bundle.getInt("tankFull") == 0){
                     notificationManager.cancel(0);
-                    //tankNotification = null;
                 }
 
                 TextView humidityTextView = (TextView) findViewById(R.id.currentHumidityTextView);
