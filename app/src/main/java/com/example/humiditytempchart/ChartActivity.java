@@ -53,6 +53,7 @@ public class ChartActivity extends AppCompatActivity {
                 humidityList.clear();
                 tempList.clear();
                 for(int i =0; i < timestampArray.length; i++ ){
+
                     humidityList.add(new Entry(timestampArray[i], humidityArray[i]));
                     tempList.add(new Entry(timestampArray[i], tempArray[i]));
                 }
