@@ -18,8 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.logging.Logger;
-
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
@@ -42,7 +40,7 @@ public class RegistrationActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.passwd);
         Btn = findViewById(R.id.btnregister);
-        progressbar = findViewById(R.id.progressBar);
+        progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
 
         // Set on Click Listener on Registration button

@@ -41,14 +41,14 @@ public class LoginActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.password);
         Btn = findViewById(R.id.login);
-        progressbar = findViewById(R.id.progressBar);
-        progressbar.setVisibility(View.GONE);
+        progressbar = (ProgressBar) findViewById(R.id.progressBarLogIn);
 
         // Set on Click Listener on Sign-in button
         Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
+                progressbar.setVisibility(View.VISIBLE);
                 loginUserAccount();
             }
         });
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         if(sp1!=null) {
             emailTextView.setText(sp1.getString("Unm", null));
             passwordTextView.setText(sp1.getString("Psw", null));
-            loginUserAccount();
+            if(!(TextUtils.isEmpty(emailTextView.getText()) || TextUtils.isEmpty(passwordTextView.getText()))) loginUserAccount();
         }
     }
 
@@ -66,9 +66,6 @@ public class LoginActivity extends AppCompatActivity {
     {
         SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
         SharedPreferences.Editor Ed=sp.edit();
-
-        // show the visibility of progress bar to show loading
-        progressbar.setVisibility(View.VISIBLE);
 
         // Take the value of two edit texts in Strings
         String email, password;
@@ -106,8 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    // hide the progress bar
-                                    progressbar.setVisibility(View.GONE);
 
                                     Ed.putString("Unm",email );
                                     Ed.putString("Psw",password);
