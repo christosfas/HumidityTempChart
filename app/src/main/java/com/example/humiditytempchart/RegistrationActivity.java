@@ -26,7 +26,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private static final String TAG  = RegistrationActivity.class.getSimpleName();
 
-    private EditText emailTextView, passwordTextView;
+    private EditText emailTextView, passwordTextView, macTextView;
     private Button Btn;
     private ProgressBar progressbar;
     private FirebaseAuth mAuth;
@@ -46,6 +46,7 @@ public class RegistrationActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.passwd);
+        macTextView = findViewById(R.id.macEditText);
         Btn = findViewById(R.id.btnregister);
         progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
@@ -67,9 +68,10 @@ public class RegistrationActivity extends AppCompatActivity {
         progressbar.setVisibility(View.VISIBLE);
 
         // Take the value of two edit texts in Strings
-        String email, password;
+        String email, password, mac;
         email = emailTextView.getText().toString();
         password = passwordTextView.getText().toString();
+        mac = macTextView.getText().toString();
 
         // Validations for input email and password
         if (TextUtils.isEmpty(email)) {
@@ -82,6 +84,13 @@ public class RegistrationActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(getApplicationContext(),
                             "Please enter password!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (TextUtils.isEmpty(mac)) {
+            Toast.makeText(getApplicationContext(),
+                            "Please enter mac!!",
                             Toast.LENGTH_LONG)
                     .show();
             return;
@@ -105,7 +114,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
 
                             dbUsers.collection("users")
-                                    .add(new User(task.getResult().getUser().getUid(), email, "00:00:00:00:00:00"))
+                                    .add(new User(task.getResult().getUser().getUid(), email, mac))
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
