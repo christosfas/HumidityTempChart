@@ -19,6 +19,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.data.Entry;
@@ -31,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "FirebaseNotificationChannel";
     private FirebaseService firebaseService;
     private Intent firebaseServiceIntent;
+    private ImageView upBtn;
+    private ImageView downBtn;
+    private EditText editTextHumidity;
+    private int setHumidityThreshold = 55;
     NotificationManagerCompat notificationManager;
     NotificationCompat.Builder tankNotificationbuilder;
 
@@ -91,6 +98,31 @@ public class MainActivity extends AppCompatActivity {
         notificationManager = NotificationManagerCompat.from(this);
         createNotificationChannel();
 
+        downBtn = (ImageView) findViewById(R.id.downBtn);
+        upBtn = (ImageView) findViewById(R.id.upBtn);
+        editTextHumidity = (EditText) findViewById(R.id.editTextHumidity);
+
+        editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+
+        downBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(setHumidityThreshold > 20){
+                    setHumidityThreshold -= 1;
+                    editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+                }
+            }
+        });
+
+        upBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(setHumidityThreshold <99) {
+                    setHumidityThreshold += 1;
+                    editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+                }
+            }
+        });
 
     }
 
