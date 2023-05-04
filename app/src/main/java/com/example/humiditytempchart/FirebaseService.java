@@ -38,9 +38,10 @@ public class FirebaseService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
-        jsonRef = FirebaseDatabase.getInstance().getReference("test/json/");
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
+
+        jsonRef = FirebaseDatabase.getInstance().getReference("mac10521cead776/output/");
         jsonRef.addValueEventListener(listener);
         return mBinder;
     }

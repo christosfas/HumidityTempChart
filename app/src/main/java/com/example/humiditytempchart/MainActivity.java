@@ -1,5 +1,6 @@
 package com.example.humiditytempchart;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -24,16 +25,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "FirebaseNotificationChannel";
     private FirebaseService firebaseService;
     private Intent firebaseServiceIntent;
+    private DatabaseReference jsonRef;
     private ImageView upBtn;
     private ImageView downBtn;
     private EditText editTextHumidity;
@@ -102,7 +107,15 @@ public class MainActivity extends AppCompatActivity {
         upBtn = (ImageView) findViewById(R.id.upBtn);
         editTextHumidity = (EditText) findViewById(R.id.editTextHumidity);
 
-        editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+        jsonRef = FirebaseDatabase.getInstance().getReference("mac10521cead776/input/");
+        jsonRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                setHumidityThreshold=task.getResult().child("setHumidity/0").getValue(int.class);
+                editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+            }
+        });
+
 
         downBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 if(setHumidityThreshold > 20){
                     setHumidityThreshold -= 1;
                     editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+                    jsonRef.child("setHumidity/0").setValue(setHumidityThreshold);
                 }
             }
         });
@@ -120,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 if(setHumidityThreshold <99) {
                     setHumidityThreshold += 1;
                     editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
+                    jsonRef.child("setHumidity/0").setValue(setHumidityThreshold);
                 }
             }
         });
