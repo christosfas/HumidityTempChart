@@ -18,6 +18,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = intent.getBundleExtra("bundle");
                 float[] humidityArray = bundle.getFloatArray("humidityList");
                 float[] tempArray = bundle.getFloatArray("tempList");
-                float[] timestampArray = bundle.getFloatArray("timestampList");
+                //float[] timestampArray = bundle.getFloatArray("timestampList");
 
                 if(bundle.getInt("tankFull") == 1){
                     notificationManager.notify(0, tankNotificationbuilder.build());
@@ -106,6 +108,21 @@ public class MainActivity extends AppCompatActivity {
         downBtn = (ImageView) findViewById(R.id.downBtn);
         upBtn = (ImageView) findViewById(R.id.upBtn);
         editTextHumidity = (EditText) findViewById(R.id.editTextHumidity);
+        editTextHumidity.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    Log.e("MainActivity", "Action ID = " + i + " Keyevent " + (keyEvent!=null?keyEvent.toString():"is null"));
+                    if(keyEvent!=null?keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER:false){
+                        int value = Integer.parseInt(String.valueOf(editTextHumidity.getText()));
+                        if(value < 100 && value >=20 ){
+                            setHumidityThreshold = value;
+                            jsonRef.child("setHumidity/0").setValue(setHumidityThreshold);
+                        }
+                        return true;
+                    }
+                return false;
+            }
+        });
 
         jsonRef = FirebaseDatabase.getInstance().getReference("mac10521cead776/input/");
         jsonRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

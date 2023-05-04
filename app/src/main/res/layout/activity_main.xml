@@ -157,6 +157,7 @@
         android:textColorHint="#FFFFFF"
         android:textColorLink="#03A8F3"
         android:textSize="34sp"
+        android:imeOptions="actionSend"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
