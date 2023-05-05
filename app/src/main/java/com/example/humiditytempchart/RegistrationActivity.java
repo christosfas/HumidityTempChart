@@ -1,9 +1,21 @@
 package com.example.humiditytempchart;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.PatternMatcher;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,15 +34,54 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 public class RegistrationActivity extends AppCompatActivity {
 
     private static final String TAG  = RegistrationActivity.class.getSimpleName();
+    final String formatMAC = "%02X:%02X:%02X:%02X:%02X:%02X";
+    final String[] permissions = new String[] {Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_FINE_LOCATION};
 
     private EditText emailTextView, passwordTextView, macTextView;
-    private Button Btn;
+    private Button Btn, macScanBtn;
     private ProgressBar progressbar;
+    WifiManager wifiManager;
+    BroadcastReceiver wifiScanReceiver;
     private FirebaseAuth mAuth;
     private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
+
+    private void scanFailure() {
+        Toast.makeText(getApplicationContext(),
+                        "Scan failed!",
+                        Toast.LENGTH_LONG)
+                .show();
+    }
+
+    private void scanSuccess() {
+        List<ScanResult> scanResults = wifiManager.getScanResults();
+        Log.i(TAG, scanResults.toString());
+    }
+
+    private ActivityResultLauncher<String[]> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
+                Log.e(TAG, isGranted.toString());
+                if (!isGranted.values().contains(false)) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                    Toast.makeText(getApplicationContext(),
+                                    "You need to give permissions to scan!",
+                                    Toast.LENGTH_LONG)
+                            .show();
+
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,8 +99,15 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordTextView = findViewById(R.id.passwd);
         macTextView = findViewById(R.id.macEditText);
         Btn = findViewById(R.id.btnregister);
+        macScanBtn = findViewById(R.id.macScanBtn);
         progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
+
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiScanReceiver = new WiFiReceiver();
+        registerReceiver(wifiScanReceiver, new IntentFilter("android.net.wifi.SCAN_RESULTS"));
+
+
 
         // Set on Click Listener on Registration button
         Btn.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +115,25 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 registerNewUser();
+            }
+        });
+
+        macScanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission_group.LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission_group.NEARBY_DEVICES) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.CHANGE_WIFI_STATE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    // You can directly ask for the permission.
+                    // The registered ActivityResultCallback gets the result of this request.
+                    requestPermissionLauncher.launch(permissions);
+                }
+                boolean startScan = wifiManager.startScan();
+                Log.e(TAG, "Scan successful: " + startScan);
             }
         });
     }
@@ -94,6 +171,11 @@ public class RegistrationActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG)
                     .show();
             return;
+        } else if(!Pattern.matches(formatMAC, mac)){
+            Toast.makeText(getApplicationContext(),
+                            "Valid MAC format is: XX:XX:XX:XX:XX:XX",
+                            Toast.LENGTH_LONG)
+                    .show();
         }
 
         // create new user or register new user
@@ -155,5 +237,19 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    class WiFiReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            boolean success = intent.getBooleanExtra(
+                    WifiManager.EXTRA_RESULTS_UPDATED, false);
+            if (success) {
+                scanSuccess();
+            } else {
+                // scan failure handling
+                scanFailure();
+            }
+        }
     }
 }
