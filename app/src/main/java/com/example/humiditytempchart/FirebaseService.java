@@ -16,12 +16,14 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FirebaseService extends Service {
     private final IBinder mBinder = new LocalBinder();
     List<Float> humidityList = new ArrayList<Float>();
     List<Float> tempList = new ArrayList<Float>();
     List<Float> timestampList = new ArrayList<Float>();
+    private String deviceMAC = "";
     int tankFull = 0;
     DatabaseReference jsonRef;
     long ref_ts = 0;
@@ -41,7 +43,9 @@ public class FirebaseService extends Service {
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 //        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
 
-        jsonRef = FirebaseDatabase.getInstance().getReference("mac10521cead776/output/");
+        if(this.deviceMAC == "") this.deviceMAC = intent.getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
+
+        jsonRef = FirebaseDatabase.getInstance().getReference("mac" + deviceMAC + "/output/");
         jsonRef.addValueEventListener(listener);
         return mBinder;
     }

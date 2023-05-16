@@ -20,6 +20,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.EditText;
@@ -34,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -46,6 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText emailTextView, passwordTextView, macTextView;
     private Button Btn, macScanBtn;
     private ProgressBar progressbar;
+    private ListView scanResultView;
     WifiManager wifiManager;
     BroadcastReceiver wifiScanReceiver;
     private FirebaseAuth mAuth;
@@ -60,7 +65,26 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void scanSuccess() {
         List<ScanResult> scanResults = wifiManager.getScanResults();
+        List<String> scanResultStringList = new ArrayList<>();
+        for (ScanResult result : scanResults) scanResultStringList.add(result.SSID + " \n" + "RSSI: " + result.level + " MAC: " + result.BSSID);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, scanResultStringList);
+        scanResultView.setAdapter(adapter);
+        scanResultView.setVisibility(View.VISIBLE);
         Log.i(TAG, scanResults.toString());
+        scanResultView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedSSID = adapterView.getItemAtPosition(i).toString().split(" ")[0];
+                Log.e(TAG, selectedSSID);
+                for (ScanResult result : scanResults){
+                    if(result.SSID.equals(selectedSSID)){
+                        //Log.e(TAG, "Found it!");
+                        macTextView.setText(result.BSSID);
+                        scanResultView.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -102,6 +126,7 @@ public class RegistrationActivity extends AppCompatActivity {
         macScanBtn = findViewById(R.id.macScanBtn);
         progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
+        scanResultView = (ListView) findViewById(R.id.scanResultView);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiScanReceiver = new WiFiReceiver();

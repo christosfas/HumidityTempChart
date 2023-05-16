@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
@@ -19,6 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressbar;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -104,17 +110,36 @@ public class LoginActivity extends AppCompatActivity {
                                             .show();
 
 
-                                    Ed.putString("Unm",email );
+                                    Ed.putString("Unm",email ); //write user to shared preferences
                                     Ed.putString("Psw",password);
                                     Ed.commit();
 
-                                    // if sign-in is successful
-                                    // intent to home activity
-                                    Intent intent
-                                            = new Intent(LoginActivity.this,
-                                            MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                    //find user from firestore to get associated mac address / device
+                                    Query firestoreUserQuery = dbUsers.collection("users").whereEqualTo("email", email);
+                                    firestoreUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                            if(task.isSuccessful()){
+
+                                                User loggedInUser = task.getResult().getDocuments().get(0).toObject(User.class); //get user entry from firestore to associate with device MAC
+                                                Log.e(this.getClass().getSimpleName(),loggedInUser.mac.get(0));
+
+                                                // if sign-in is successful
+                                                // intent to home activity
+                                                Intent intent
+                                                        = new Intent(LoginActivity.this,
+                                                        MainActivity.class);
+                                                intent.putExtra("deviceMAC", loggedInUser.mac.get(0)); //every user can have multiple devices assigned so mac attr. is list
+                                                startActivity(intent);
+                                                finish();
+
+                                            }else{
+                                                Toast.makeText(getApplicationContext(), "User association with device not found in database", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+
                                 }
 
                                 else {

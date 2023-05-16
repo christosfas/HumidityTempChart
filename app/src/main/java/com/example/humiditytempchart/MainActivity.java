@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView downBtn;
     private EditText editTextHumidity;
     private int setHumidityThreshold = 55;
+    private String deviceMAC;
     NotificationManagerCompat notificationManager;
     NotificationCompat.Builder tankNotificationbuilder;
 
@@ -97,8 +98,10 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+        deviceMAC = getIntent().getStringExtra("deviceMAC");
 
         firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
+        firebaseServiceIntent.putExtra("deviceMAC", deviceMAC);
         getApplicationContext().bindService(firebaseServiceIntent, mConnection, BIND_AUTO_CREATE);
         getApplicationContext().startService(firebaseServiceIntent);
         getApplicationContext().registerReceiver(firebaseReceiver, new IntentFilter("com.example.humiditytempchart.broadcast.FIREBASE_ACTION"));
