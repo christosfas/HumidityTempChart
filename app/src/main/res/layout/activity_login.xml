@@ -22,31 +22,62 @@
 
     <!-- TextView for heading -->
     <TextView
+        android:id="@+id/loginTXT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"/>
+        android:text="Login" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailLayoutLogin"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Email"
+        app:layout_constraintTop_toBottomOf="@id/loginTXT"
+        app:passwordToggleEnabled="false"
+        app:boxStrokeColor="@color/fasoulablue"
+        app:hintTextColor="@color/fasoulaorange">
+
+
 
     <!-- Edit text for email -->
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your Email" />
+        android:inputType="textEmailAddress"
+        android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- Edit text for password -->
-    <EditText
-        android:id="@+id/password"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/apPasswordLayoutLogin"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your Password"
-        android:inputType="textPassword" />
+        android:layout_marginTop="8dp"
+        android:hint="Password"
+        app:layout_constraintTop_toBottomOf="@id/emailLayoutLogin"
+        app:boxStrokeColor="@color/fasoulablue"
+        app:hintTextColor="@color/fasoulaorange"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Button for Login with text "Login" -->
     <Button
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#03A9F4"
+        android:backgroundTint="@color/fasoulablue"
         android:text="Login" />
 
     <!-- ProgressBar for Loading Time -->
@@ -62,6 +93,7 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:clickable="true"
         android:onClick="goToRegister"
         android:text="Don't have an account? Tap here to register"

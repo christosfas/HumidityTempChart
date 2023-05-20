@@ -66,20 +66,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
 
-        <ListView
-            android:id="@+id/scanResultView"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:visibility="gone"
-            ></ListView>
-
-        <WebView
-            android:id="@+id/setUpWebView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            ></WebView>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#FE7F27"
-                android:text="Scan"
+                android:text="Configure\nDevice"
                 />
 
         </LinearLayout>

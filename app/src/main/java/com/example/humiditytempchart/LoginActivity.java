@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailTextView, passwordTextView;
     private Button Btn;
     private ProgressBar progressbar;
+    private TextInputLayout txtLayout;
+    private TextView loginTxt, goToRegisterTxt;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
@@ -48,13 +51,15 @@ public class LoginActivity extends AppCompatActivity {
         passwordTextView = findViewById(R.id.password);
         Btn = findViewById(R.id.login);
         progressbar = (ProgressBar) findViewById(R.id.progressBarLogIn);
+        txtLayout = findViewById(R.id.apPasswordLayoutLogin);
+        loginTxt = findViewById(R.id.loginTXT);
+        goToRegisterTxt = findViewById(R.id.textView3);
 
         // Set on Click Listener on Sign-in button
         Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                progressbar.setVisibility(View.VISIBLE);
                 loginUserAccount();
             }
         });
@@ -70,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUserAccount()
     {
+        progressbar.setVisibility(View.VISIBLE);
         SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
         SharedPreferences.Editor Ed=sp.edit();
 
@@ -131,10 +137,12 @@ public class LoginActivity extends AppCompatActivity {
                                                         = new Intent(LoginActivity.this,
                                                         MainActivity.class);
                                                 intent.putExtra("deviceMAC", loggedInUser.mac.get(0)); //every user can have multiple devices assigned so mac attr. is list
+                                                progressbar.setVisibility(View.GONE);
                                                 startActivity(intent);
                                                 finish();
 
                                             }else{
+                                                progressbar.setVisibility(View.GONE);
                                                 Toast.makeText(getApplicationContext(), "User association with device not found in database", Toast.LENGTH_LONG).show();
                                             }
                                         }
@@ -152,6 +160,11 @@ public class LoginActivity extends AppCompatActivity {
 
                                     // hide the progress bar
                                     progressbar.setVisibility(View.GONE);
+                                    //        emailTextView.setVisibility(View.VISIBLE);
+                                    //        txtLayout.setVisibility(View.VISIBLE);
+                                    //        loginTxt.setVisibility(View.VISIBLE);
+                                    //        Btn.setVisibility(View.VISIBLE);
+                                    //        goToRegisterTxt.setVisibility(View.VISIBLE);
                                 }
                             }
                         });

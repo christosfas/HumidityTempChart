@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class DeviceConfigActivity extends AppCompatActivity {
 
-    private Button btn;
+    private Button btn, cancelBtn;
     private WifiInfo mWiFiInfo;
     private EditText passwordEditTxt, devCountEdtTxt;
     private TextView ssidTxt, bssidTxt, resultTxt;
@@ -59,6 +59,13 @@ public class DeviceConfigActivity extends AppCompatActivity {
         devCountEdtTxt = findViewById(R.id.deviceCountEdit);
         progressView = (ConstraintLayout) findViewById(R.id.progressView);
         content = (ConstraintLayout) findViewById(R.id.content);
+        cancelBtn = findViewById(R.id.cancel_button);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mTask != null) mTask.cancelEsptouch();
+            }
+        });
         btn = findViewById(R.id.confirmBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
