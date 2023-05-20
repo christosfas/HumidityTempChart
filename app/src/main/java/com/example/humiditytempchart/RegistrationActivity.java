@@ -3,26 +3,23 @@ package com.example.humiditytempchart;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.content.Intent;
-import android.os.PatternMatcher;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.EditText;
@@ -36,9 +33,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -50,42 +44,12 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText emailTextView, passwordTextView, macTextView;
     private Button Btn, macScanBtn;
     private ProgressBar progressbar;
-    private ListView scanResultView;
+    private WifiInfo mWiFiInfo;
     WifiManager wifiManager;
-    BroadcastReceiver wifiScanReceiver;
     private FirebaseAuth mAuth;
     private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
 
-    private void scanFailure() {
-        Toast.makeText(getApplicationContext(),
-                        "Scan failed!",
-                        Toast.LENGTH_LONG)
-                .show();
-    }
 
-    private void scanSuccess() {
-        List<ScanResult> scanResults = wifiManager.getScanResults();
-        List<String> scanResultStringList = new ArrayList<>();
-        for (ScanResult result : scanResults) scanResultStringList.add(result.SSID + " \n" + "RSSI: " + result.level + " MAC: " + result.BSSID);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, scanResultStringList);
-        scanResultView.setAdapter(adapter);
-        scanResultView.setVisibility(View.VISIBLE);
-        Log.i(TAG, scanResults.toString());
-        scanResultView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedSSID = adapterView.getItemAtPosition(i).toString().split(" ")[0];
-                Log.e(TAG, selectedSSID);
-                for (ScanResult result : scanResults){
-                    if(result.SSID.equals(selectedSSID)){
-                        //Log.e(TAG, "Found it!");
-                        macTextView.setText(result.BSSID);
-                        scanResultView.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
-    }
 
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
@@ -126,12 +90,9 @@ public class RegistrationActivity extends AppCompatActivity {
         macScanBtn = findViewById(R.id.macScanBtn);
         progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
-        scanResultView = (ListView) findViewById(R.id.scanResultView);
-
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiScanReceiver = new WiFiReceiver();
-        registerReceiver(wifiScanReceiver, new IntentFilter("android.net.wifi.SCAN_RESULTS"));
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            wifiManager = getSystemService(WifiManager.class);
+        }
 
 
         // Set on Click Listener on Registration button
@@ -146,21 +107,30 @@ public class RegistrationActivity extends AppCompatActivity {
         macScanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission_group.LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission_group.NEARBY_DEVICES) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.CHANGE_WIFI_STATE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    // You can directly ask for the permission.
-                    // The registered ActivityResultCallback gets the result of this request.
-                    requestPermissionLauncher.launch(permissions);
-                }
-                boolean startScan = wifiManager.startScan();
-                Log.e(TAG, "Scan successful: " + startScan);
+                mWiFiInfo = wifiManager.getConnectionInfo();
+                Intent intent = new Intent(RegistrationActivity.this, DeviceConfigActivity.class);
+                intent.putExtra("wifiInfo", mWiFiInfo);
+                startActivityForResult(intent, 1);
             }
         });
+
+        if (!(ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission_group.LOCATION) ==
+                PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission_group.NEARBY_DEVICES) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.CHANGE_WIFI_STATE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED)) {
+            requestPermissionLauncher.launch(permissions);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            String bssid = data.getStringExtra("bssid");
+            macTextView.setText(bssid);
+        }
+
     }
 
     private void registerNewUser()
@@ -264,17 +234,4 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
     }
 
-    class WiFiReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context c, Intent intent) {
-            boolean success = intent.getBooleanExtra(
-                    WifiManager.EXTRA_RESULTS_UPDATED, false);
-            if (success) {
-                scanSuccess();
-            } else {
-                // scan failure handling
-                scanFailure();
-            }
-        }
-    }
 }

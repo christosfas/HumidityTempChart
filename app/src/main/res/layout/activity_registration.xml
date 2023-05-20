@@ -8,12 +8,14 @@
     android:layout_height="match_parent"
     android:background="@color/cardview_dark_background"
     android:fillViewport="true"
+    android:padding="8dp"
     tools:context=".ChartActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:padding="7dp"
         android:orientation="vertical">
 
         <!-- TextView for heading -->
@@ -25,6 +27,12 @@
         <!-- Button for register with text "Register" -->
 
         <!-- ProgressBar for loading time -->
+
+        <ImageView
+            android:id="@+id/registerLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            app:srcCompat="@drawable/logo" />
 
         <TextView
             android:id="@+id/textView2"
@@ -60,14 +68,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
 
-        <ListView
-            android:id="@+id/scanResultView"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:visibility="gone"
-            ></ListView>
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#FE7F27"
-                android:text="Scan"
+                android:text="Configure\nDevice"
                 />
 
         </LinearLayout>

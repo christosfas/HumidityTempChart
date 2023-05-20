@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToCharts(View view) {
         Intent intent = new Intent(MainActivity.this,ChartActivity.class);
+        intent.putExtra("deviceMAC", deviceMAC);
         startActivity(intent);
     }
 
