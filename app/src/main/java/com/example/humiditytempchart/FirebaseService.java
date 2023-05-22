@@ -1,12 +1,17 @@
 package com.example.humiditytempchart;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +32,9 @@ public class FirebaseService extends Service {
     int tankFull = 0;
     DatabaseReference jsonRef;
     long ref_ts = 0;
+    NotificationManagerCompat notificationManager;
+    NotificationCompat.Builder tankNotificationbuilder;
+    private static final String CHANNEL_ID = "FirebaseNotificationChannel";
 
     public FirebaseService() {
     }
@@ -44,6 +52,8 @@ public class FirebaseService extends Service {
 //        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
 
         if(this.deviceMAC == "") this.deviceMAC = intent.getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
+        notificationManager = NotificationManagerCompat.from(this);
+        createNotificationChannel();
 
         jsonRef = FirebaseDatabase.getInstance().getReference("mac" + deviceMAC + "/output/");
         jsonRef.addValueEventListener(listener);
@@ -115,6 +125,11 @@ public class FirebaseService extends Service {
             }
 
             tankFull = DataSnapshot.child("tankFull/0").getValue(Integer.class);
+            if(tankFull == 1){
+                notificationManager.notify(0, tankNotificationbuilder.build());
+            }else if(tankFull == 0){
+                notificationManager.cancel(0);
+            }
 
             broadcastUpdate("com.example.humiditytempchart.broadcast.FIREBASE_ACTION");
 
@@ -126,5 +141,27 @@ public class FirebaseService extends Service {
 
         }
     };
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            tankNotificationbuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                    .setSmallIcon(R.drawable.waterdrop)
+                    .setContentTitle("Dehumidifier Notification")
+                    .setContentText("Tank is full or removed")
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        }
+    }
 
 }

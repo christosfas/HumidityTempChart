@@ -202,12 +202,12 @@ public class DeviceConfigActivity extends AppCompatActivity {
                 resultMsgList.add(message);
             }
             CharSequence[] items = new CharSequence[resultMsgList.size()];
-            mResultDialog = new AlertDialog.Builder(activity)
-                    .setTitle(R.string.esptouch1_configure_result_success)
-                    .setItems(resultMsgList.toArray(items), null)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
-            mResultDialog.setCanceledOnTouchOutside(false);
+//            mResultDialog = new AlertDialog.Builder(activity)
+//                    .setTitle(R.string.esptouch1_configure_result_success)
+//                    .setItems(resultMsgList.toArray(items), null)
+//                    .setPositiveButton(android.R.string.ok, null)
+//                    .show();
+//            mResultDialog.setCanceledOnTouchOutside(false);
             String bssid = result.get(0).getBssid();
             Log.e(TAG, bssid);
             Intent intent = new Intent();

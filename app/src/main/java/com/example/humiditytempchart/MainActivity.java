@@ -39,7 +39,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String CHANNEL_ID = "FirebaseNotificationChannel";
     private FirebaseService firebaseService;
     private Intent firebaseServiceIntent;
     private DatabaseReference jsonRef;
@@ -48,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextHumidity;
     private int setHumidityThreshold = 55;
     private String deviceMAC = "";
-    NotificationManagerCompat notificationManager;
-    NotificationCompat.Builder tankNotificationbuilder;
 
     private BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
         @Override
@@ -59,12 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 float[] humidityArray = bundle.getFloatArray("humidityList");
                 float[] tempArray = bundle.getFloatArray("tempList");
                 //float[] timestampArray = bundle.getFloatArray("timestampList");
-
-                if(bundle.getInt("tankFull") == 1){
-                    notificationManager.notify(0, tankNotificationbuilder.build());
-                }else if(bundle.getInt("tankFull") == 0){
-                    notificationManager.cancel(0);
-                }
 
                 TextView humidityTextView = (TextView) findViewById(R.id.currentHumidityTextView);
                 if(humidityArray.length > 0)humidityTextView.setText(String.valueOf(humidityArray[humidityArray.length-1]));
@@ -107,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
         getApplicationContext().bindService(firebaseServiceIntent, mConnection, BIND_AUTO_CREATE);
         getApplicationContext().startService(firebaseServiceIntent);
         getApplicationContext().registerReceiver(firebaseReceiver, new IntentFilter("com.example.humiditytempchart.broadcast.FIREBASE_ACTION"));
-        notificationManager = NotificationManagerCompat.from(this);
-        createNotificationChannel();
 
         downBtn = (ImageView) findViewById(R.id.downBtn);
         upBtn = (ImageView) findViewById(R.id.upBtn);
@@ -161,28 +150,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-            tankNotificationbuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                    .setSmallIcon(R.drawable.waterdrop)
-                    .setContentTitle("Dehumidifier Notification")
-                    .setContentText("Tank is full or removed")
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        }
     }
 
     public void goToCharts(View view) {
