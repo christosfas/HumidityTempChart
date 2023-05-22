@@ -192,6 +192,13 @@ public class ChartActivity extends AppCompatActivity {
 
     public void goBack(View view) {
         Intent intent = new Intent(ChartActivity.this,MainActivity.class);
+        intent.putExtra("deviceMAC", deviceMAC);
+        startActivity(intent);
+    }
+
+    public void onBackPressed(){
+        Intent intent = new Intent(ChartActivity.this,MainActivity.class);
+        intent.putExtra("deviceMAC", deviceMAC);
         startActivity(intent);
     }
 

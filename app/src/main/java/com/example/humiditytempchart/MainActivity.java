@@ -35,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "FirebaseNotificationChannel";
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView downBtn;
     private EditText editTextHumidity;
     private int setHumidityThreshold = 55;
-    private String deviceMAC;
+    private String deviceMAC = "";
     NotificationManagerCompat notificationManager;
     NotificationCompat.Builder tankNotificationbuilder;
 
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        deviceMAC = getIntent().getStringExtra("deviceMAC");
+        deviceMAC = getIntent().getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
 
         firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
         firebaseServiceIntent.putExtra("deviceMAC", deviceMAC);
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        jsonRef = FirebaseDatabase.getInstance().getReference("mac10521cead776/input/");
+        jsonRef = FirebaseDatabase.getInstance().getReference("mac" + deviceMAC + "/input/");
         jsonRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
