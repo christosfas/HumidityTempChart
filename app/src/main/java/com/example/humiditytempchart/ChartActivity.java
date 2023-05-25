@@ -12,8 +12,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
-import com.example.humiditytempchart.FirebaseService;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +24,6 @@ import android.os.IBinder;
 import android.view.View;
 import android.view.Window;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
