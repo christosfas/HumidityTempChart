@@ -47,35 +47,27 @@ public class DeviceConfigActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_device_config);
 
-        mWiFiInfo = (WifiInfo) getIntent().getParcelableExtra("wifiInfo");
-        ssidTxt = (TextView) findViewById(R.id.apSsidText);
+        mWiFiInfo = getIntent().getParcelableExtra("wifiInfo");
+        ssidTxt = findViewById(R.id.apSsidText);
         ssidTxt.setText(mWiFiInfo.getSSID().substring(1, mWiFiInfo.getSSID().length()-1));
-        bssidTxt = (TextView) findViewById(R.id.apBssidText);
+        bssidTxt = findViewById(R.id.apBssidText);
         bssidTxt.setText(mWiFiInfo.getBSSID());
         resultTxt =  findViewById(R.id.testResult);
 
-        packageModeGroup = (RadioGroup) findViewById(R.id.packageModeGroup);
+        packageModeGroup = findViewById(R.id.packageModeGroup);
         passwordEditTxt = findViewById(R.id.apPasswordEdit);
         devCountEdtTxt = findViewById(R.id.deviceCountEdit);
-        progressView = (ConstraintLayout) findViewById(R.id.progressView);
-        content = (ConstraintLayout) findViewById(R.id.content);
+        progressView = findViewById(R.id.progressView);
+        content = findViewById(R.id.content);
         cancelBtn = findViewById(R.id.cancel_button);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mTask != null) mTask.cancelEsptouch();
-            }
+        cancelBtn.setOnClickListener(view -> {
+            if(mTask != null) mTask.cancelEsptouch();
         });
         btn = findViewById(R.id.confirmBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                executeEsptouch();
-            }
-        });
+        btn.setOnClickListener(view -> executeEspTouch());
     }
 
-    private void executeEsptouch() {
+    private void executeEspTouch() {
         byte[] ssid = ByteUtil.getBytesByString(mWiFiInfo.getSSID().substring(1, mWiFiInfo.getSSID().length()-1));
         Log.e(TAG, mWiFiInfo.getSSID().substring(1, mWiFiInfo.getSSID().length()-1));
         CharSequence pwdStr = passwordEditTxt.getText();
@@ -201,7 +193,7 @@ public class DeviceConfigActivity extends AppCompatActivity {
                         touchResult.getBssid(), touchResult.getInetAddress().getHostAddress());
                 resultMsgList.add(message);
             }
-            CharSequence[] items = new CharSequence[resultMsgList.size()];
+//            CharSequence[] items = new CharSequence[resultMsgList.size()];
 //            mResultDialog = new AlertDialog.Builder(activity)
 //                    .setTitle(R.string.esptouch1_configure_result_success)
 //                    .setItems(resultMsgList.toArray(items), null)

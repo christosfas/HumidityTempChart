@@ -1,38 +1,37 @@
 package com.example.humiditytempchart;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.EditText;
-import android.widget.Button;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.AuthResult;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -51,10 +50,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 
-    private ActivityResultLauncher<String[]> requestPermissionLauncher =
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
                 Log.e(TAG, isGranted.toString());
-                if (!isGranted.values().contains(false)) {
+                if (!isGranted.containsValue(false)) {
                     // Permission is granted. Continue the action or workflow in your
                     // app.
                 } else {
@@ -88,7 +87,7 @@ public class RegistrationActivity extends AppCompatActivity {
         macTextView = findViewById(R.id.macEditText);
         Btn = findViewById(R.id.btnregister);
         macScanBtn = findViewById(R.id.macScanBtn);
-        progressbar = (ProgressBar) findViewById(R.id.progressBarReg);
+        progressbar = findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             wifiManager = getSystemService(WifiManager.class);
@@ -96,22 +95,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         // Set on Click Listener on Registration button
-        Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                registerNewUser();
-            }
-        });
+        Btn.setOnClickListener(v -> registerNewUser());
 
-        macScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mWiFiInfo = wifiManager.getConnectionInfo();
-                Intent intent = new Intent(RegistrationActivity.this, DeviceConfigActivity.class);
-                intent.putExtra("wifiInfo", mWiFiInfo);
-                startActivityForResult(intent, 1);
-            }
+        macScanBtn.setOnClickListener(view -> {
+            mWiFiInfo = wifiManager.getConnectionInfo();
+            Intent intent = new Intent(RegistrationActivity.this, DeviceConfigActivity.class);
+            intent.putExtra("wifiInfo", mWiFiInfo);
+            startActivityForResult(intent, 1);
         });
 
         if (!(ContextCompat.checkSelfPermission(
@@ -192,22 +182,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             dbUsers.collection("users")
                                     .add(new User(task.getResult().getUser().getUid(), email, mac))
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Log.d(TAG, "User added with action ID: " + documentReference.getId());
-                                            Toast.makeText(getApplicationContext(),
-                                                            "User added to database",
-                                                            Toast.LENGTH_LONG)
-                                                    .show();
-                                        }
+                                    .addOnSuccessListener(documentReference -> {
+                                        Log.d(TAG, "User added with action ID: " + documentReference.getId());
+                                        Toast.makeText(getApplicationContext(),
+                                                        "User added to database",
+                                                        Toast.LENGTH_LONG)
+                                                .show();
                                     })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error adding User", e);
-                                        }
-                                    });
+                                    .addOnFailureListener(e -> Log.w(TAG, "Error adding User", e));
 
                             // if the user created intent to login activity
                             Intent intent

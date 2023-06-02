@@ -1,5 +1,6 @@
 package com.example.humiditytempchart;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -25,15 +26,16 @@ import java.util.Locale;
 
 public class FirebaseService extends Service {
     private final IBinder mBinder = new LocalBinder();
-    List<Float> humidityList = new ArrayList<Float>();
-    List<Float> tempList = new ArrayList<Float>();
-    List<Float> timestampList = new ArrayList<Float>();
+    List<Float> humidityList = new ArrayList<>();
+    List<Float> tempList = new ArrayList<>();
+    List<Float> timestampList = new ArrayList<>();
     private String deviceMAC = "";
     int tankFull = 0;
     DatabaseReference jsonRef;
     long ref_ts = 0;
     NotificationManagerCompat notificationManager;
-    NotificationCompat.Builder tankNotificationbuilder;
+    NotificationCompat.Builder tankNotificationBuilder;
+    private Notification mNotification = null;
     private static final String CHANNEL_ID = "FirebaseNotificationChannel";
 
     public FirebaseService() {
@@ -51,7 +53,7 @@ public class FirebaseService extends Service {
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 //        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1024*1024*100);
 
-        if(this.deviceMAC == "") this.deviceMAC = intent.getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
+        if(this.deviceMAC.equals("")) this.deviceMAC = intent.getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
         notificationManager = NotificationManagerCompat.from(this);
         createNotificationChannel();
 
@@ -99,9 +101,15 @@ public class FirebaseService extends Service {
             array[index++] = value;
         }
         bundle.putFloatArray("tempList", array);
-
         bundle.putLong("ref_ts", ref_ts);
         bundle.putInt("tankFull", tankFull);
+        if(tankFull == 1 && mNotification == null){
+            mNotification = tankNotificationBuilder.build();
+            notificationManager.notify(0, mNotification);
+        }else if(tankFull == 0){
+            notificationManager.cancel(0);
+            mNotification = null;
+        }
         intent.putExtra( "bundle", bundle);
         sendBroadcast(intent);
     }
@@ -110,11 +118,11 @@ public class FirebaseService extends Service {
         @Override
         public void onDataChange (@NonNull DataSnapshot DataSnapshot){
 
-            for(int i =8; i >= 0; i--){                 //index 0 is the most recent entry
-                Long ts = 1000L * DataSnapshot.child("timestamp").child(Integer.toString(i)).getValue(Long.class);
-                if(timestampList.isEmpty() || timestampList.get(timestampList.size()-1).longValue() + ref_ts < ts.longValue()){
-                    if(timestampList.isEmpty()) ref_ts = ts.longValue();
-                    timestampList.add((float) (ts.longValue()-ref_ts));
+            for(int i = (int) DataSnapshot.child("timestamp").getChildrenCount()-1; i >= 0; i--){                 //index 0 is the most recent entry
+                long ts = 1000L * DataSnapshot.child("timestamp").child(Integer.toString(i)).getValue(Long.class);
+                if(timestampList.isEmpty() || timestampList.get(timestampList.size()-1).longValue() + ref_ts < ts){
+                    if(timestampList.isEmpty()) ref_ts = ts;
+                    timestampList.add((float) (ts-ref_ts));
 
                     Float humidity = DataSnapshot.child("humidity").child(Integer.toString(i)).getValue(Float.class);
                     humidityList.add(humidity);
@@ -125,10 +133,12 @@ public class FirebaseService extends Service {
             }
 
             tankFull = DataSnapshot.child("tankFull/0").getValue(Integer.class);
-            if(tankFull == 1){
-                notificationManager.notify(0, tankNotificationbuilder.build());
+            if(tankFull == 1 && mNotification == null){
+                mNotification = tankNotificationBuilder.build();
+                notificationManager.notify(0, mNotification);
             }else if(tankFull == 0){
                 notificationManager.cancel(0);
+                mNotification = null;
             }
 
             broadcastUpdate("com.example.humiditytempchart.broadcast.FIREBASE_ACTION");
@@ -148,11 +158,13 @@ public class FirebaseService extends Service {
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.shouldShowLights();
+            channel.shouldVibrate();
             channel.setDescription(description);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            tankNotificationbuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+            tankNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                     .setSmallIcon(R.drawable.waterdrop)
                     .setContentTitle("Dehumidifier Notification")
                     .setContentText("Tank is full or removed")

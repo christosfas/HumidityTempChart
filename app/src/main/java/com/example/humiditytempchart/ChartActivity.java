@@ -1,6 +1,5 @@
 package com.example.humiditytempchart;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.Window;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class ChartActivity extends AppCompatActivity {
@@ -33,13 +31,10 @@ public class ChartActivity extends AppCompatActivity {
     private String deviceMAC;
     private LineChart humidityChart;
     private LineChart tempChart;
-    ArrayList<Entry> humidityList =  new ArrayList<Entry>();
-    ArrayList<Entry> tempList =  new ArrayList<Entry>();
-    List<Float> timestampList = new ArrayList<Float>();
+    ArrayList<Entry> humidityList =  new ArrayList<>();
+    ArrayList<Entry> tempList =  new ArrayList<>();
     long ref_ts = 0;
-    private FirebaseService firebaseService;
-    private Intent firebaseServiceIntent;
-    private BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("com.example.humiditytempchart.broadcast.FIREBASE_ACTION")){
@@ -96,10 +91,9 @@ public class ChartActivity extends AppCompatActivity {
         }
     };
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            firebaseService = ((FirebaseService.LocalBinder) iBinder).getService();
 
         }
 
@@ -123,7 +117,7 @@ public class ChartActivity extends AppCompatActivity {
 
         deviceMAC = getIntent().getStringExtra("deviceMAC");
 
-        firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
+        Intent firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
         firebaseServiceIntent.putExtra("deviceMAC", deviceMAC);
         getApplicationContext().bindService(firebaseServiceIntent, mConnection, BIND_AUTO_CREATE);
         getApplicationContext().startService(firebaseServiceIntent);
@@ -131,7 +125,7 @@ public class ChartActivity extends AppCompatActivity {
         IMarker marker = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view_layout);
 
 
-        humidityChart = (LineChart)findViewById(R.id.humidityChart);
+        humidityChart = findViewById(R.id.humidityChart);
         YAxis humidityYAxis = humidityChart.getAxisLeft();
         humidityYAxis.setAxisMinimum(0f);
         humidityYAxis.setAxisMaximum(100f);
@@ -158,7 +152,7 @@ public class ChartActivity extends AppCompatActivity {
         humidityChart.getDescription().setText("Humidity Measurements Curve");
         humidityChart.setMarker(marker);
 
-        tempChart = (LineChart)findViewById(R.id.tempChart);
+        tempChart = findViewById(R.id.tempChart);
         YAxis tempYAxis = tempChart.getAxisLeft();
         tempYAxis.setAxisMinimum(10f);
         tempYAxis.setAxisMaximum(45f);

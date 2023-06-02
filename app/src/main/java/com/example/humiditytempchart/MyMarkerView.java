@@ -16,7 +16,7 @@ public class MyMarkerView extends MarkerView {
         super(context, layoutResource);
 
         // find your layout components
-        tvContent = (TextView) findViewById(R.id.tvContent);
+        tvContent = findViewById(R.id.tvContent);
     }
 
     // callbacks everytime the MarkerView is redrawn, can be used to update the
