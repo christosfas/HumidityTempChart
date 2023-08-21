@@ -8,7 +8,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/background"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -17,14 +17,14 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="7dp"
-        android:background="@color/cardview_dark_background"
+        android:background="@color/background"
         tools:context=".LoginActivity">
 
         <ImageView
             android:id="@+id/loginLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo_removebg" />
 
         <!-- TextView for heading -->
         <TextView

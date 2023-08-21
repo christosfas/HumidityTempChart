@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <ScrollView
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cardview_dark_background"
+        android:background="@color/background"
         tools:context=".MainActivity">
 
     <TextView
@@ -97,7 +97,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:srcCompat="@drawable/thermometer" />
+        app:srcCompat="@drawable/thermometer_removebg" />
 
     <TextView
         android:id="@+id/textView7"
@@ -175,7 +175,7 @@
         app:layout_constraintStart_toEndOf="@+id/editTextHumidity"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.916"
-        app:srcCompat="@drawable/arrowup" />
+        app:srcCompat="@drawable/arrowup_removebg" />
 
     <ImageView
         android:id="@+id/downBtn"
@@ -190,7 +190,7 @@
         app:layout_constraintStart_toEndOf="@+id/editTextHumidity"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.134"
-        app:srcCompat="@drawable/arrowdown" />
+        app:srcCompat="@drawable/arrowdown_removebg" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

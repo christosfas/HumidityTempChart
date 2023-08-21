@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/background"
     android:fillViewport="true"
     android:padding="8dp"
     tools:context=".ChartActivity">
@@ -32,7 +32,7 @@
             android:id="@+id/registerLogo"
             android:layout_width="wrap_content"
             android:layout_height="300dp"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo_removebg" />
 
         <TextView
             android:id="@+id/textView2"

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/background"
     android:fillViewport="true"
     tools:context=".ChartActivity">
 
@@ -42,7 +42,7 @@
         android:id="@+id/backButton"
         android:layout_width="77dp"
         android:layout_height="48dp"
-        android:background="#424242"
+        android:background="@color/background"
         android:onClick="goBack"
         app:layout_constraintBottom_toTopOf="@+id/humidityChart"
         app:layout_constraintEnd_toEndOf="parent"
