@@ -22,14 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseService firebaseService;
-    private Intent firebaseServiceIntent;
     private DatabaseReference jsonRef;
-    private ImageView upBtn;
-    private ImageView downBtn;
     private EditText editTextHumidity;
     private int setHumidityThreshold = 55;
     private String deviceMAC = "";
@@ -56,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            firebaseService = ((FirebaseService.LocalBinder) iBinder).getService();
+            FirebaseService firebaseService = ((FirebaseService.LocalBinder) iBinder).getService();
 
         }
 
@@ -75,18 +72,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
         deviceMAC = getIntent().getStringExtra("deviceMAC").toLowerCase(Locale.ROOT).replaceAll(":", "");
 
-        firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
+        Intent firebaseServiceIntent = new Intent(getApplicationContext(), FirebaseService.class);
         firebaseServiceIntent.putExtra("deviceMAC", deviceMAC);
         getApplicationContext().bindService(firebaseServiceIntent, mConnection, BIND_AUTO_CREATE);
         getApplicationContext().startService(firebaseServiceIntent);
         getApplicationContext().registerReceiver(firebaseReceiver, new IntentFilter("com.example.humiditytempchart.broadcast.FIREBASE_ACTION"));
 
-        downBtn = findViewById(R.id.downBtn);
-        upBtn = findViewById(R.id.upBtn);
+        ImageView downBtn = findViewById(R.id.downBtn);
+        ImageView upBtn = findViewById(R.id.upBtn);
         editTextHumidity = findViewById(R.id.editTextHumidity);
         editTextHumidity.setOnEditorActionListener((textView, i, keyEvent) -> {
                 Log.e("MainActivity", "Action ID = " + i + " Keyevent " + (keyEvent!=null?keyEvent.toString():"is null"));
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         jsonRef = FirebaseDatabase.getInstance().getReference("mac" + deviceMAC + "/input/");
         jsonRef.get().addOnCompleteListener(task -> {
-            setHumidityThreshold=task.getResult().child("setHumidity/0").getValue(int.class);
+            setHumidityThreshold = task.getResult().child("setHumidity/0").getValue(int.class);
             editTextHumidity.setText(Integer.valueOf(setHumidityThreshold).toString());
         });
 

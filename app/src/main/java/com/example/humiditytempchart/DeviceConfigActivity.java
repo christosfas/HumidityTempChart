@@ -28,13 +28,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class DeviceConfigActivity extends AppCompatActivity {
 
-    private Button btn, cancelBtn;
     private WifiInfo mWiFiInfo;
     private EditText passwordEditTxt, devCountEdtTxt;
-    private TextView ssidTxt, bssidTxt, resultTxt;
+    private TextView resultTxt;
     private RadioGroup packageModeGroup;
     private ConstraintLayout progressView, content;
     private EsptouchAsyncTask mTask;
@@ -44,13 +44,14 @@ public class DeviceConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_device_config);
 
         mWiFiInfo = getIntent().getParcelableExtra("wifiInfo");
-        ssidTxt = findViewById(R.id.apSsidText);
+
+        TextView ssidTxt = findViewById(R.id.apSsidText);
         ssidTxt.setText(mWiFiInfo.getSSID().substring(1, mWiFiInfo.getSSID().length()-1));
-        bssidTxt = findViewById(R.id.apBssidText);
+        TextView bssidTxt = findViewById(R.id.apBssidText);
         bssidTxt.setText(mWiFiInfo.getBSSID());
         resultTxt =  findViewById(R.id.testResult);
 
@@ -59,11 +60,11 @@ public class DeviceConfigActivity extends AppCompatActivity {
         devCountEdtTxt = findViewById(R.id.deviceCountEdit);
         progressView = findViewById(R.id.progressView);
         content = findViewById(R.id.content);
-        cancelBtn = findViewById(R.id.cancel_button);
+        Button cancelBtn = findViewById(R.id.cancel_button);
         cancelBtn.setOnClickListener(view -> {
             if(mTask != null) mTask.cancelEsptouch();
         });
-        btn = findViewById(R.id.confirmBtn);
+        Button btn = findViewById(R.id.confirmBtn);
         btn.setOnClickListener(view -> executeEspTouch());
     }
 

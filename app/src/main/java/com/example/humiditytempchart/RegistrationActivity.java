@@ -24,14 +24,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -41,12 +39,11 @@ public class RegistrationActivity extends AppCompatActivity {
     final String[] permissions = new String[] {Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_FINE_LOCATION};
 
     private EditText emailTextView, passwordTextView, macTextView;
-    private Button Btn, macScanBtn;
     private ProgressBar progressbar;
     private WifiInfo mWiFiInfo;
     WifiManager wifiManager;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
 
 
 
@@ -75,7 +72,7 @@ public class RegistrationActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_registration);
 
         // taking FirebaseAuth instance
@@ -85,8 +82,8 @@ public class RegistrationActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.passwd);
         macTextView = findViewById(R.id.macEditText);
-        Btn = findViewById(R.id.btnregister);
-        macScanBtn = findViewById(R.id.macScanBtn);
+        Button btn = findViewById(R.id.btnregister);
+        Button macScanBtn = findViewById(R.id.macScanBtn);
         progressbar = findViewById(R.id.progressBarReg);
         progressbar.setVisibility(View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -95,7 +92,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         // Set on Click Listener on Registration button
-        Btn.setOnClickListener(v -> registerNewUser());
+        btn.setOnClickListener(v -> registerNewUser());
 
         macScanBtn.setOnClickListener(view -> {
             mWiFiInfo = wifiManager.getConnectionInfo();
@@ -117,6 +114,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == RESULT_OK) {
+            assert data != null;
             String bssid = data.getStringExtra("bssid");
             macTextView.setText(bssid);
         }
@@ -181,7 +179,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
 
                             dbUsers.collection("users")
-                                    .add(new User(task.getResult().getUser().getUid(), email, mac))
+                                    .add(new User(Objects.requireNonNull(task.getResult().getUser()).getUid(), email, mac))
                                     .addOnSuccessListener(documentReference -> {
                                         Log.d(TAG, "User added with action ID: " + documentReference.getId());
                                         Toast.makeText(getApplicationContext(),

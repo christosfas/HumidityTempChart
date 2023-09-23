@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class MyXAxisValueFormatter extends ValueFormatter  {
-    private long ref;
+    private final long ref;
 
     public MyXAxisValueFormatter (long ref){
 

@@ -25,23 +25,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
-    private Button Btn;
     private ProgressBar progressbar;
-    private TextInputLayout txtLayout;
-    private TextView loginTxt, goToRegisterTxt;
+    private TextView loginTxt;
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore dbUsers = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_login);
         // taking instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
@@ -49,14 +49,14 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.password);
-        Btn = findViewById(R.id.login);
-        progressbar = (ProgressBar) findViewById(R.id.progressBarLogIn);
-        txtLayout = findViewById(R.id.apPasswordLayoutLogin);
+        Button btn = findViewById(R.id.login);
+        progressbar = findViewById(R.id.progressBarLogIn);
+        TextInputLayout txtLayout = findViewById(R.id.apPasswordLayoutLogin);
         loginTxt = findViewById(R.id.loginTXT);
-        goToRegisterTxt = findViewById(R.id.textView3);
+        TextView goToRegisterTxt = findViewById(R.id.textView3);
 
         // Set on Click Listener on Sign-in button
-        Btn.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Ed.putString("Unm",email ); //write user to shared preferences
                                     Ed.putString("Psw",password);
-                                    Ed.commit();
+                                    Ed.apply();
 
                                     //find user from firestore to get associated mac address / device
                                     Query firestoreUserQuery = dbUsers.collection("users").whereEqualTo("email", email);
@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
 
                                                 User loggedInUser = task.getResult().getDocuments().get(0).toObject(User.class); //get user entry from firestore to associate with device MAC
+                                                assert loggedInUser != null;
                                                 Log.e(this.getClass().getSimpleName(),loggedInUser.mac.get(0));
 
                                                 // if sign-in is successful
@@ -160,11 +161,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                     // hide the progress bar
                                     progressbar.setVisibility(View.GONE);
-                                    //        emailTextView.setVisibility(View.VISIBLE);
-                                    //        txtLayout.setVisibility(View.VISIBLE);
-                                    //        loginTxt.setVisibility(View.VISIBLE);
-                                    //        Btn.setVisibility(View.VISIBLE);
-                                    //        goToRegisterTxt.setVisibility(View.VISIBLE);
                                 }
                             }
                         });

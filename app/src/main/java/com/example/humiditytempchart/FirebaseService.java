@@ -78,7 +78,7 @@ public class FirebaseService extends Service {
         final Intent intent = new Intent(action);
         Bundle bundle = new Bundle();
 
-        Float[] WrapperTimestampArray = timestampList.toArray(new Float[timestampList.size()]);
+        Float[] WrapperTimestampArray = timestampList.toArray(new Float[0]);
         float[] array = new float[WrapperTimestampArray.length];
         int index = 0;
         for(final Float value : WrapperTimestampArray ){
@@ -86,7 +86,7 @@ public class FirebaseService extends Service {
         }
         bundle.putFloatArray("timestampList", array);
 
-        WrapperTimestampArray = humidityList.toArray(new Float[humidityList.size()]);
+        WrapperTimestampArray = humidityList.toArray(new Float[0]);
         index = 0;
         array = new float[WrapperTimestampArray.length];
         for(final Float value : WrapperTimestampArray ){
@@ -94,7 +94,7 @@ public class FirebaseService extends Service {
         }
         bundle.putFloatArray("humidityList", array);
 
-        WrapperTimestampArray = tempList.toArray(new Float[tempList.size()]);
+        WrapperTimestampArray = tempList.toArray(new Float[0]);
         index = 0;
         array = new float[WrapperTimestampArray.length];
         for(final Float value : WrapperTimestampArray ){

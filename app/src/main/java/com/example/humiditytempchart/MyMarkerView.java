@@ -10,7 +10,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 public class MyMarkerView extends MarkerView {
 
-    private TextView tvContent;
+    private final TextView tvContent;
 
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
@@ -37,7 +37,7 @@ public class MyMarkerView extends MarkerView {
 
         if(mOffset == null) {
             // center the marker horizontally and vertically
-            mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
+            mOffset = new MPPointF(-(getWidth() / 2f), -getHeight());
         }
 
         return mOffset;
