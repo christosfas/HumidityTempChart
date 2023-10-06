@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.HumidityTempChart" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.HumidityTempChart" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/fasoulablue</item>
         <item name="colorPrimaryVariant">@color/fasoulablue</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/fasoulaorange</item>
         <item name="colorSecondaryVariant">@color/fasoulaorange</item>
@@ -13,11 +13,4 @@
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="Theme.HumidityTempChart.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-    <style name="Theme.HumidityTempChart.AppBarOverlay"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="Theme.HumidityTempChart.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 </resources>

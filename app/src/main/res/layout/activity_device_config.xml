@@ -30,6 +30,7 @@ android:padding="16dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:singleLine="true"
+        android:textColor="#EFE7E7"
         android:textAppearance="?android:attr/textAppearanceMedium"
         app:layout_constraintBaseline_toBaselineOf="@id/apSsidLabel"
         app:layout_constraintStart_toEndOf="@id/apSsidLabel"
@@ -54,6 +55,7 @@ android:padding="16dp"
         android:layout_marginStart="4dp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#EFE7E7"
         app:layout_constraintBaseline_toBaselineOf="@id/apBssidLabel"
         app:layout_constraintStart_toEndOf="@id/apBssidLabel"
         app:layout_constraintTop_toTopOf="@id/apBssidLabel" />
@@ -65,10 +67,13 @@ android:padding="16dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="WiFi Password"
+        android:textColor="#EFE7E7"
+        android:textColorHint="#EFE7E7"
         app:layout_constraintTop_toBottomOf="@id/apBssidLabel"
         app:passwordToggleEnabled="true"
         app:boxStrokeColor="@color/fasoulablue"
-        app:hintTextColor="@color/fasoulaorange">
+        app:hintTextColor="@color/fasoulaorange"
+        app:passwordToggleTint="@color/fasoulablue">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/apPasswordEdit"
@@ -76,6 +81,7 @@ android:padding="16dp"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:singleLine="true"
+            android:textColor="#EFE7E7"
             android:textCursorDrawable="@color/fasoulaorange"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,6 +92,7 @@ android:padding="16dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Device Count"
+        android:textColorHint="@color/fasoulaorange"
         app:layout_constraintTop_toBottomOf="@id/apPasswordLayout"
         app:boxStrokeColor="@color/fasoulablue"
         app:hintTextColor="@color/fasoulaorange">
@@ -96,6 +103,7 @@ android:padding="16dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:text="1"
+            android:textColor="#EFE7E7"
             android:textCursorDrawable="@color/fasoulaorange"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,14 +120,16 @@ android:padding="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Broadcast"/>
+            android:text="Broadcast"
+            android:textColor="@color/fasoulablue"/>
 
         <RadioButton
             android:id="@+id/packageMulticast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Multicast" />
+            android:text="Multicast"
+            android:textColor="@color/fasoulablue"/>
     </RadioGroup>
 
     <TextView

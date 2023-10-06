@@ -25,8 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Objects;
-
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
@@ -40,8 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         // taking instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
@@ -90,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                             "Please enter email!!",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
             return;
         }
 
@@ -98,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                             "Please enter password!!",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
             return;
         }
 

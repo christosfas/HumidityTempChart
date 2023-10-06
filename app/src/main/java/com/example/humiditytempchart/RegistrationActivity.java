@@ -71,8 +71,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_registration);
 
         // taking FirebaseAuth instance
@@ -139,6 +138,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter email!!",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -146,6 +146,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter password!!",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(mac)) {
@@ -153,12 +154,14 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter mac!!",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
             return;
         } else if(!Pattern.matches(formatMAC, mac)){
             Toast.makeText(getApplicationContext(),
                             "Valid MAC format is: XX:XX:XX:XX:XX:XX",
                             Toast.LENGTH_LONG)
                     .show();
+            progressbar.setVisibility(View.GONE);
         }
 
         // create new user or register new user

@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
+            android:textColor="#EFE7E7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -51,6 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your Email"
+            android:textColor="#EFE7E7"
+            android:textColorHint="#EFE7E7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter your Password"
+            android:textColor="#EFE7E7"
+            android:textColorHint="#EFE7E7"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -78,7 +83,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:hint="MAC"/>
+                android:hint="MAC"
+                android:textColor="#EFE7E7"
+                android:textColorHint="#EFE7E7"/>
 
             <Button
                 android:id="@+id/macScanBtn"
@@ -96,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
+            android:layout_gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/btnregister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
